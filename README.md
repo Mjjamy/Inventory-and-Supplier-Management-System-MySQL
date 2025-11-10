@@ -7,6 +7,7 @@
 4. [Key Queries](#key-queries)
 5. [Insights](#insights)
 6. [Conclusion](#conclusion)
+7. [Limitations](#limitations)
 
 ---
 
@@ -14,12 +15,15 @@
 
 ---
 
-A **MySQL-based Inventory and Supplier Management System** to manage **products**, **suppliers**, and **stock levels**. It tracks inventory, restock schedules, and supplier-product links. The system identifies low-stock items, products never restocked, and supplier-wise shortages, ensuring **efficient inventory monitoring** and **management**.
+A **MySQL-based Inventory and Supplier Management System** to manage **products**, **suppliers**, and **stock levels**. It tracks inventory, restock schedules, and supplier-product links. The system identifies low-stock items, products never restocked, and supplier-wise shortages.
+
+<img width="937" height="550" alt="E R Diagram-Inventory and Supply Management System" src="https://github.com/user-attachments/assets/31e41339-937c-4aaa-8455-ff63675d4281" />
+
 
 
 ## Database Structure
 
-The **Inventory and Supplier Management System** is built using a **relational database** model with **five main tables** being created, ensuring data consistency through **primary and foreign key constraints**.
+The **Inventory and Supplier Management System** is built using a **relational database** model with **five main tables**.
 
 ### 1. Products
 
@@ -30,7 +34,7 @@ Stores details of each product in the system.
 
 ### 2. Inventory
 
-Tracks stock levels and minimum quantity thresholds.
+Tracks stock levels and minimum quantity of products.
 
 * **Primary Key:** `Inventory_id`
 * **Foreign Key:** `prodID` - `Products(prodID)`
@@ -74,7 +78,7 @@ Defines the **many-to-many relationship** between Products and Suppliers.
 
 ## Data Insertion
 
-After creating the database and tables, sample data is inserted to simulate a real-world inventory and supplier setup. This data helps demonstrate stock levels, supplier relations, and restock schedules.
+After creating the database and tables sample data is inserted to simulate a real-world inventory and supplier setup. 
 
 ### Insert Statements
 
@@ -112,11 +116,10 @@ INSERT INTO RestockSchedule (prodID, restockdate, restockquantity) VALUES
 
 * Products and suppliers are linked via the `ProdSupplier` table (many-to-many relationship).
 * Inventory levels and restock schedules are predefined for test use.
-* Data provides a solid base for testing queries like low stock detection and restock tracking.
 
 ## Key Queries
 
-This section includes essential SQL queries used to **analyze and manage the inventory system** — from checking stock levels to tracking supplier performance.
+This section includes essential SQL queries used to **analyze and manage the inventory system**.
 
 ### 1. Fetch Products That Need Restocking or Are Out of Stock
 
@@ -128,6 +131,8 @@ FROM Inventory i
 JOIN Products p ON i.prodID = p.prodID
 WHERE i.Quant_available = 0;
 ```
+<img width="877" height="397" alt="Query-1" src="https://github.com/user-attachments/assets/f623435d-f24b-4700-92d2-d38729ef01b0" />
+
 
 ### 2. Fetch Restocking History for a Particular Product
 
@@ -139,6 +144,8 @@ FROM RestockSchedule r
 JOIN Products p ON r.prodID = p.prodID
 WHERE p.productName = 'smartphone';
 ```
+<img width="881" height="396" alt="Query-2" src="https://github.com/user-attachments/assets/d9d0a55f-9acd-46f7-9b52-322c475e303c" />
+
 
 ### 3. Fetch Products That Were Never Restocked
 
@@ -150,6 +157,8 @@ FROM Products p
 LEFT JOIN RestockSchedule r ON p.prodID = r.prodID
 WHERE r.prodID IS NULL;
 ```
+<img width="874" height="399" alt="Query-3" src="https://github.com/user-attachments/assets/e536af61-a650-4343-b8fe-e36039264b64" />
+
 
 
 
@@ -165,6 +174,8 @@ JOIN ProdSupplier ps ON i.prodID = ps.prodID
 JOIN Suppliers s ON ps.S_id = s.S_id
 WHERE i.Quant_available < i.MinQuantity;
 ```
+<img width="880" height="395" alt="Query-4" src="https://github.com/user-attachments/assets/4d47b0bd-65a7-46ca-a082-6ad9ad48866f" />
+
 
 ### 5. Fetch the Number of Low-Stock Products per Supplier
 
@@ -178,29 +189,27 @@ JOIN Inventory i ON ps.prodID = i.prodID
 WHERE i.Quant_available < i.MinQuantity
 GROUP BY s.S_name;
 ```
+<img width="877" height="394" alt="Query-5" src="https://github.com/user-attachments/assets/99e46b35-27e4-4f3a-8910-f9ac51350afb" />
 
 
 
-### Summary
-
-* Queries help monitor **stock health**, **supplier performance**, and **restocking needs**.
-* Supports **inventory decision-making** and **supply chain efficiency** through real-time insights.
-
-## Insights
-
-1. **Smartphone** and **Marker** are nearing or below their minimum stock levels, signaling the need for immediate restocking.
+## Insights 
    
-2. **Restock schedules** show planned replenishments for smartphones on *March 1, 2025* and markers on *February 25, 2025*.
+1. **Restock schedules** showed planned restocking for smartphones on *March 1, 2025* and markers on *February 25, 2025*.
  
-3. **Table Chair** has never been restocked, indicating a possible supply gap or overstocked item.
+3. **Table Chair** has never been restocked indicating a possible supply gap or overstocked item.
  
-4. **QuickTech Ltd** supplies high-demand electronics, while **OffSolutions Ltd** manages most office items.
+4. **QuickTech Ltd** supplies electronics while **OffSolutions Ltd** manages most office items.
  
-5. **OffSolutions Ltd** has multiple products close to minimum quantity, highlighting the need for better supply management.
+5. **Smartphones and markers** are close to minimum quantity highlighting the need for better supply management.
 
 ## Conclusion
 
-The **Inventory and Supplier Management System** efficiently tracks products, suppliers, and restocking activities through a well-structured MySQL database. It ensures real-time visibility into stock levels, restock planning, and supplier performance, helping businesses maintain optimal inventory control and prevent stockouts.
+The **Inventory and Supplier Management System** efficiently tracks products, suppliers, and restocking activities through a well-structured MySQL database. It ensures visibility into stock levels, restock planning, and supplier performance helping businesses to maintain inventory control and prevent stockouts.
+
+## Limitations
+
+Restocking schedules and quantities must be entered manually increasing the chance of human error.
 
 
 
